@@ -91,5 +91,7 @@ public class Gen {
         this.exones_data = exones_data;
     }
     
-    
+    public void findExones(){
+        
+    }
 }
