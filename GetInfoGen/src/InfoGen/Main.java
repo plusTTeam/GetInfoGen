@@ -8,10 +8,9 @@ package InfoGen;
  *
  * @author Jesus
  */
-public class GetInfoGen {
-    
-    
-    public void JPL(String commandProlog){
-    
+public class Main {
+    private static Gen gig;
+    public static void main(String [ ] args){
+        gig = new Gen();
     }
 }
