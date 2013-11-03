@@ -112,6 +112,7 @@ public class Gen {
             if( (gen.size()-1) >= minExon && (gen.size()-1) <= maxExon){
                 lecturas.add(new Lectura(gen, 0, null, gen.size()-1));
             }
+            return true;
         }
         //Caso optimo una vez verificadas los casos se realiza el procedimiento normalmente
         if (!ag.isEmpty() && !gt.isEmpty() && !atg.isEmpty() && !paradas.isEmpty()) {
