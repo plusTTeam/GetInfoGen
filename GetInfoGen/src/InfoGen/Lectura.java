@@ -15,10 +15,15 @@ public class Lectura {
     private List<String> gen;
     private Integer atg;
     private List<Par> intrones;
+    private List<Par> exones;
     private Integer parada;
     private List<String> intrones_data;
     private List<String> exones_data;
-
+    
+    //Formato Intron [2,(5,8),(12,15),20]
+    //Formato Intron Data [atg,(gtafasag),(gtaasdag),taa]
+    //Formato Exon [(2,4),(9,11),(16,20)]
+    //Formato Exon Data [atg,(gtafasag),(gtaasdag),taa]
     public Lectura() {
     }
 
