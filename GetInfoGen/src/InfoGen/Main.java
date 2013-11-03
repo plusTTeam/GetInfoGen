@@ -7,7 +7,7 @@ public class Main {
     public static void main(String [ ] args){
         gig = new Gen();
        middleWare middle = new middleWare();
-        middle.init("C:/gen_prueba.pl");
+        middle.init("C:/p_genes.pl");
         middle.consultEverything();        
         gig.setAg(middle.getAgPositions());
         gig.setAtg(middle.getAtgPositions());
