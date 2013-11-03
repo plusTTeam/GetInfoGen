@@ -54,9 +54,9 @@ public class middleWare {
         return q2.oneSolution().get(Var).toString();
     }
 
-    public void init() {
+    public void init(String URLdelPL) {
         //Abriendo el archivo
-        String t1 = "consult('/Users/roycalderon/Desktop/LAST STAND/Teacher/predictor/p_genes.pl')";
+        String t1 = "consult('"+URLdelPL+"')";
         Query q1 = new Query(t1);
         System.out.println(t1 + " " + (q1.hasSolution() ? "succeeded" : "failed"));
 
