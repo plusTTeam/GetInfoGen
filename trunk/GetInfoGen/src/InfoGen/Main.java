@@ -1,16 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package InfoGen;
 
-import java.util.Arrays;
 import prologConection.middleWare;
 
-/**
- *
- * @author Jesus
- */
 public class Main {
     private static Gen gig;
     public static void main(String [ ] args){

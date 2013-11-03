@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package prologConection;
 
 import java.util.ArrayList;
@@ -16,8 +11,6 @@ import jpl.Query;
  *
  * obtener los resultados con el metodo {Query}.oneSolution.get("{Nombre de la
  * variable}")
- *
- * @author roycalderon
  */
 public class middleWare {
 
@@ -30,7 +23,6 @@ public class middleWare {
     /**
      * Define el archivo matriz -> p_genes.pl Y busca
      *
-     * JavaDocsito Por Roy
      */
     public void consultEverything() {
         //Obteniendo los valores...
