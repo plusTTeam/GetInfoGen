@@ -28,10 +28,9 @@ public class middleWare {
         //Obteniendo los valores...
         String t2 = "gen(G), p_gener(G, Patgs, Pgt, Pag, Ppar, Pint, Gen, R).";
         Query q2 = new Query(t2);
-
         System.out.println("G = " + q2.oneSolution().get("G"));
         System.out.println("Patgs = " + q2.oneSolution().get("Patgs"));
-        System.out.println("Pgt = " + q2.oneSolution().get("Pgt    "));
+        System.out.println("Pgt = " + q2.oneSolution().get("Pgt"));
         System.out.println("Pag = " + q2.oneSolution().get("Pag"));
         System.out.println("Pint = " + q2.oneSolution().get("Pint"));
         System.out.println("Gen = " + q2.oneSolution().get("Gen"));

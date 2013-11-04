@@ -14,6 +14,7 @@ public class Gen {
     private List<List<Par>> cadenasIntrones;
     private List<Par> intrones;
     private List<Lectura> lecturas;
+    //Cambian de acuerdo a al tipo de gen
     private static int maxIntron = 100000;
     private static int minIntron = 60;
     private static int maxExon = 6000;
@@ -116,6 +117,7 @@ public class Gen {
         }
         //Caso optimo una vez verificadas los casos se realiza el procedimiento normalmente
         if (!ag.isEmpty() && !gt.isEmpty() && !atg.isEmpty() && !paradas.isEmpty()) {
+            //Se extraen los intrones simples sin combinarlos entre ellos
             Integer gtValido;
             for (Integer gtaux : gt) {
                 gtValido = gtaux;
@@ -129,6 +131,7 @@ public class Gen {
                 }
             }
             if (!intrones.isEmpty()) {
+                //Se calculan las combinaciones entre intrones con los antes ya extraidos y se carga una lista de lista de pares llamada cadenasIntrones            
                 for (Par test : intrones) {
                     List<Par> intronesaux = new ArrayList<>(intrones);
                     List<Par> cadenaIntronesAux = new ArrayList<>();
@@ -148,9 +151,11 @@ public class Gen {
                     }
 
                 }
+                //Se agregan los intrones simples a la lista de lista cadenasIntrones
                 for (Par p : intrones) {
                     cadenasIntrones.add(Arrays.asList(p));
                 }
+                //Se calculan lecturas validas
                 for (Integer atgaux : atg) {
                     for (Integer paradasAux : paradas) {
                         for (List<Par> cadintro : cadenasIntrones) {
