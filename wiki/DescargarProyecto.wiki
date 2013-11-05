@@ -1,0 +1,14 @@
+#summary One-sentence summary of this page.
+
+= Introducción =
+
+Estas son breves instrucciones para descargar el proyecto...
+
+
+= Detalles =
+
+Para obtener el proyecto debe usar Cualquier version de Netbeans 7 y acceder:
+  * Ir a Equipo -> Subversion -> CheckOut
+  # Ingresar el siguiente URL de repositorio: http://getinfogen.googlecode.com/svn/trunk/
+  # Dejar en blanco usuario y contraseña para obtener acceso anonimo.
+  # Continuar con el Wizard para definir ruta y abrir el proyecto.
