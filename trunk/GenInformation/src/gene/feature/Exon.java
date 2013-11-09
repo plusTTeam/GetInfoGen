@@ -17,8 +17,32 @@ public class Exon extends GenePart {
 
     //---------------------------------------
     //  </editor-fold>
+    //---------------------------Package Methods-------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Package Methods">
+    String getFirstToGene() {
+        String out = this.innerInfo.get(0).toString();
+        out += this.innerInfo.get(1).toString();
+        return out;
+    }
+    
+    //---------------------------------------
+    String getLastToGene() {
+        int last = this.innerInfo.size() - 2;
+        String out = this.innerInfo.get(last++).toString();
+        out += this.innerInfo.get(last).toString();
+        return out;
+    }
+    
+    //---------------------------------------
+    Information getLastInfToGene(){
+        int last = this.innerInfo.size() - 2;
+        return this.innerInfo.get(last);
+    }
+    
+    //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
+
     @Override
     public String getStringInfo(boolean intron) {
         String out = "(";
