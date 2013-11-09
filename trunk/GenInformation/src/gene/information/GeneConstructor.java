@@ -23,8 +23,9 @@ public class GeneConstructor {
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
+
     /**
-     * Constructor usado para crear el objeto con las listas ya llenas de 
+     * Constructor usado para crear el objeto con las listas ya llenas de
      * acuerdo a los valores que llegan por parametros
      */
     public GeneConstructor(List<Integer> atg, List<Integer> gt, List<Integer> ag, List<Integer> stops, List<Information> geneData) {
@@ -40,7 +41,7 @@ public class GeneConstructor {
     //---------------------------------------
     /**
      * Constructor usado para llenar las listas de uso interno a traves de un
-     * objeto de la clase MiddleWare ya instanciado y probado, de donde solo se 
+     * objeto de la clase MiddleWare ya instanciado y probado, de donde solo se
      * obtendran los valores que este devuelve como entrada para generar las
      * listas internas
      */
@@ -56,8 +57,8 @@ public class GeneConstructor {
 
     //---------------------------------------
     /**
-     * Constructor solo debe ser usado si el objeto que se esta creando esta 
-     * en otra clase del mismo paquete pues, el objetivo seria poder instanciar
+     * Constructor solo debe ser usado si el objeto que se esta creando esta en
+     * otra clase del mismo paquete pues, el objetivo seria poder instanciar
      * luego todas sus listas a traves del metodo initLists
      */
     public GeneConstructor() {
@@ -99,7 +100,7 @@ public class GeneConstructor {
     public List<Information> getGeneData() {
         return geneData;
     }
-    
+
     //---------------------------------------
     public List<Information> getInnerInfo(int from, int to) {
         return geneData.subList(from, to);
@@ -107,6 +108,7 @@ public class GeneConstructor {
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
+
     /**
      * Verificaciones de casos especificos para la compatibilidad de un gen
      */
@@ -135,7 +137,7 @@ public class GeneConstructor {
     /**
      * Metodo usado para instanciar las listas a traves de listas de Integers
      * para los indices, y una lista de Strings para la data, solo es posible
-     * usarlo si se esta en el mismo paquete que esta clase, por lo que se 
+     * usarlo si se esta en el mismo paquete que esta clase, por lo que se
      * recomienda usar en lugar de esto los constructores
      */
     void initLists(List<Integer> atg, List<Integer> gt, List<Integer> ag, List<Integer> stops, List<String> data) throws Exception {
@@ -158,7 +160,43 @@ public class GeneConstructor {
     @Override
     public String toString() {
         String out = "";
-
+        String aux;
+        
+        aux = "ATG\t= [";
+        for (Integer index : atg) {
+            aux += ", " + index;
+        }
+        aux = aux.replaceFirst(", ", "");
+        aux += "]";
+        
+        out += aux + "\n";
+        
+        aux = "GT\t= [";
+        for (Integer index : gt) {
+            aux += ", " + index;
+        }
+        aux = aux.replaceFirst(", ", "");
+        aux += "]";
+        
+        out += aux + "\n";
+        
+        aux = "AG\t= [";
+        for (Integer index : ag) {
+            aux += ", " + index;
+        }
+        aux = aux.replaceFirst(", ", "");
+        aux += "]";
+        
+        out += aux + "\n";
+        
+        aux = "STOPS\t= [";
+        for (Integer index : stops) {
+            aux += ", " + index;
+        }
+        aux = aux.replaceFirst(", ", "");
+        aux += "]";
+        
+        out += aux + "\n";
         return out;
     }
     //  </editor-fold>

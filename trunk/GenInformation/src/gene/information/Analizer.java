@@ -70,7 +70,7 @@ public class Analizer {
     /**
      * Metodo usado para la construccion de lecturas, al llamar este metodo, se
      * analizaran las listas del GeneConstructor y se llenara la lista de
-     * genes(lectures) con todas las lecturas validas, este metodo recibe un 
+     * genes(lectures) con todas las lecturas validas, este metodo recibe un
      * boolean que indica si las combinaciones se haran usando un metodo
      * recursivo (true) o iterativo (false)
      */
@@ -97,16 +97,17 @@ public class Analizer {
 
                 if (!posibilities.getIntrons().isEmpty()) {
                     ArrayDeque<ArrayDeque<Intron>> mixedIntrons = new ArrayDeque<>();
-                    
-                    if(recursively)
+
+                    if (recursively) {
                         this.recursivelyMix(null, 0, 0, posibilities, 0, mixedIntrons);
-                    else
+                    } else {
                         mixedIntrons = this.iterativeMix(posibilities);
-                    
+                    }
+
                     this.generateLectures(mixedIntrons);
-                }
-                else
+                } else {
                     throw new Exception("El gen que se intenta analizar es incompatible");
+                }
             }
         } else {
             throw new Exception("El gen que se intenta analizar es incompatible");
@@ -131,12 +132,13 @@ public class Analizer {
 
         for (Integer iniIntron : constructor.getGt()) {
             for (Integer finIntron : constructor.getAg()) {
+                finIntron = finIntron + 1;
                 if (iniIntron.intValue() < finIntron.intValue()) {
                     int d = finIntron - iniIntron;
                     if (d > Model.minIntron && d < Model.maxIntron) {
                         start = constructor.getData(iniIntron);
                         end = constructor.getData(finIntron);
-                        posibilities.addIntron(new Intron(start, end, constructor.getInnerInfo(iniIntron + 1, finIntron - 1)));
+                        posibilities.addIntron(new Intron(start, end, constructor.getInnerInfo(iniIntron + 1, finIntron)));
                     }
                 }
             }
@@ -194,9 +196,9 @@ public class Analizer {
      * de intrones" donde cada lista sera una combinacion POSIBLE para una
      * lectura, pues se valida que pueda existir un exon entre ellos y demas
      * propiedades
-     *<br/><br/>
+     * <br/><br/>
      * <h1>"AUN NO FUNCIONAL"</h1>
-     *<br/><br/>
+     * <br/><br/>
      * Nota: Este metodo se desarrollo pues, la mezcla iterativa tiene casos que
      * no puede abarcar precisamente por ser iterativa, por lo que este metodo
      * es mas eficaz y debe ser usado en lugar del iterativo
@@ -207,9 +209,8 @@ public class Analizer {
             paths.push(new ArrayDeque<Intron>());
             paths.peek().push(recursivelyMix(posibilities.getIntron(pos), pos, level, posibilities, posibilities.getIntrons().size(), paths));
         } else {
-            int d;
             while (++pos < size) {
-                d = posibilities.getIntron(pos).getStart().position - last.getEnd().position;
+                int d = posibilities.getIntron(pos).getStart().position - last.getEnd().position;
 
                 if (d >= Model.minExon && d <= Model.maxExon) {
                     paths.peek().push(recursivelyMix(posibilities.getIntron(pos), pos, level + 1, posibilities, size, paths));
@@ -222,11 +223,10 @@ public class Analizer {
 
     //---------------------------------------
     /**
-     * Metodo que mezcla todas las combinaciones con los inicios y paradas 
-     * validas para que sea un gen y los agrega a la lista de genes(lectures)
-     * el parametro "mixedIntrons" deberia ser la salida de alguno de los 
-     * metodos de combinacion (recursivelyMix, iterativeMix) para mayor
-     * efectividad
+     * Metodo que mezcla todas las combinaciones con los inicios y paradas
+     * validas para que sea un gen y los agrega a la lista de genes(lectures) el
+     * parametro "mixedIntrons" deberia ser la salida de alguno de los metodos
+     * de combinacion (recursivelyMix, iterativeMix) para mayor efectividad
      */
     private void generateLectures(ArrayDeque<ArrayDeque<Intron>> mixedIntrons) {
         while (!mixedIntrons.isEmpty()) {
@@ -253,7 +253,19 @@ public class Analizer {
 
     @Override
     public String toString() {
-        return constructor.toString(); //To change body of generated methods, choose Tools | Templates.
+        String out = constructor.toString();
+
+        int i = 0;
+        for (Gene gene : lectures) {
+            out += "\n----------------------------Lectura #" + (++i) + "----------------------------------\n";
+            out += "Intrones PARES = " + gene.getPositionsInfo(true) + "\n";
+            out += "Intrones DATA = " + gene.getStringInfo(true) + "\n";
+            out += "----------------------------------------------------\n";
+            out += "Exones PARES = " + gene.getPositionsInfo(false) + "\n";
+            out += "Exones DATA = " + gene.getStringInfo(false) + "\n";
+        }
+
+        return out;
     }
     //---------------------------------------
     //  </editor-fold>

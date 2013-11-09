@@ -1,6 +1,5 @@
 package util;
 
-import gene.feature.Gene;
 import gene.information.Analizer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,11 +9,11 @@ public class GenInformation {
 
     public static void main(String[] args) throws Exception {
         if (args.length > 0) {
-            /*
+            
              MiddleWare middle = new MiddleWare();
              middle.init(args[0]);
              middle.consultEverything();
-             */
+             
             
             List<String> data = new ArrayList<>(Arrays.asList(
         /*j/i*/      //0     1     2     3     4     5     6     7     8     9    10     11    12   13    14    15     16   17
@@ -54,19 +53,11 @@ public class GenInformation {
             List<Integer> stops = new ArrayList<>(Arrays.asList(260, 444, 466));
 
             Analizer analizer = new Analizer();
-            //analizer.readFromMiddleWare(middle);
-            analizer.readFromLists(atg, gt, ag, stops, data);
+            analizer.readFromMiddleWare(middle);
+            //analizer.readFromLists(atg, gt, ag, stops, data);
 
             analizer.constructLectures(false);
-            int i = 0;
-            for (Gene gene : analizer.getLectures()) {
-                System.out.println("----------------------------Lectura #" + (++i) + "----------------------------------");
-                System.out.println("Intrones PARES = " + gene.getPositionsInfo(true));
-                System.out.println("Intrones DATA = " + gene.getStringInfo(true));
-                System.out.println("----------------------------------------------------");
-                System.out.println("Exones PARES = " + gene.getPositionsInfo(false));
-                System.out.println("Exones DATA = " + gene.getStringInfo(false));
-            }
+            System.out.println(analizer.toString());
         } else {
             throw new ArrayIndexOutOfBoundsException("Debe enviar por parametros algun archivo a evaluar\nEjemplo: genes/predictor/p_genes.pl");
         }

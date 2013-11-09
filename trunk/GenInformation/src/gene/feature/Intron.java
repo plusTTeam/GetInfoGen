@@ -9,12 +9,18 @@ import java.util.List;
  */
 public class Intron extends GenePart {
 
+    private int endStart = 0;
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
     public Intron(Information start, Information end, List<Information> innerInfo) throws Exception {
         super(start, end, innerInfo);
         
-        if (!start.info.equalsIgnoreCase(Model.GT) || !end.info.equalsIgnoreCase(Model.AG))
+        endStart = innerInfo.size() - 1;
+        
+        String gt = start.info + innerInfo.get(0);
+        String ag = innerInfo.get(endStart).info + end.info;
+        
+        if (!gt.equalsIgnoreCase(Model.GT) || !ag.equalsIgnoreCase(Model.AG))
             throw new Exception("El intron no es reconocido, DEBE comenzar por \"" + Model.GT + "\" y terminar por \"" + Model.AG + "\"");
     }
 
@@ -36,10 +42,16 @@ public class Intron extends GenePart {
         String out = "(";
 
         out += start.position.toString() + ",";
-        out += end.position.toString();
+        out += getEnd().position.toString();
 
         out += ")";
         return out;
+    }
+    
+    //---------------------------------------
+    @Override
+    public Information getEnd(){
+        return this.innerInfo.get(endStart);
     }
     //  </editor-fold>
 }
