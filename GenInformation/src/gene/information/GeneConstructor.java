@@ -20,6 +20,8 @@ public class GeneConstructor {
     private List<Integer> stops; //Pueden ser: taa, tag o tga
     //---------------------------------------
     private List<Information> geneData;
+    //---------------------------------------
+    private boolean withoutStops = false;
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
@@ -105,6 +107,13 @@ public class GeneConstructor {
     public List<Information> getInnerInfo(int from, int to) {
         return geneData.subList(from, to);
     }
+    
+    //---------------------------------------
+    public boolean isWithoutStops() {
+
+        return withoutStops;
+    }
+    
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
@@ -123,6 +132,7 @@ public class GeneConstructor {
                 this.atg.add(new Integer(0));
             }
             if (this.stops.isEmpty()) {
+                this.withoutStops = true;
                 this.stops.add(new Integer(geneData.size() - 1));
             }
         }

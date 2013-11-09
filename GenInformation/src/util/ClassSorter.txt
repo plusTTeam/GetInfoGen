@@ -7,6 +7,10 @@
     // <editor-fold desc="Public Attributes">
     //---------------------------------------
     //  </editor-fold>
+    //---------------------------Package Attributes-----------------------------
+    // <editor-fold desc="Package Attributes">
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Protected Attributes---------------------------
     // <editor-fold desc="Protected Attributes">
     //---------------------------------------
@@ -33,6 +37,10 @@
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
+    //---------------------------------------
+    //  </editor-fold>
+    //---------------------------Package Methods-------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Package Methods">
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Protected Methods------------------------------

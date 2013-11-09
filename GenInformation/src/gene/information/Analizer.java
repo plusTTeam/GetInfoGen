@@ -235,6 +235,8 @@ public class Analizer {
                 int d = introns.peekFirst().getStart().position - start;
                 if (d >= Model.minExon && d <= Model.maxExon) {
                     for (Integer end : constructor.getStops()) {
+                        if(!constructor.isWithoutStops())
+                            end = end + 2;
                         d = end - introns.peekLast().getEnd().position;
                         if (d >= Model.minExon && d <= Model.maxExon) {
                             Gene lecture = new Gene(constructor.getData(start), constructor.getData(end));
