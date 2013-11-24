@@ -1,9 +1,11 @@
 package gene.feature;
 
+import java.util.ArrayList;
 import java.util.List;
+
 /**
- * Clase abstracta que describe la forma de cualquier parte del gen,
- * metodos abstractos solo para personalizar el formato de impresion
+ * Clase abstracta que describe la forma de cualquier parte del gen, metodos
+ * abstractos solo para personalizar el formato de impresion
  */
 public abstract class GenePart implements Model {
     //---------------------------Protected Attributes---------------------------
@@ -22,7 +24,7 @@ public abstract class GenePart implements Model {
         this.end = end;
         this.innerInfo = innerInfo;
     }
-    
+
     //---------------------------------------
     public GenePart(Information start, Information end) {
         this.start = start;
@@ -31,20 +33,21 @@ public abstract class GenePart implements Model {
     //  </editor-fold>
     //---------------------------Getters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Getters">
+
     public Information getStart() {
         return start;
     }
-    
+
     //---------------------------------------
     public Information getEnd() {
         return end;
     }
-    
+
     //---------------------------------------
     public List<Information> getInnerInfo() {
         return innerInfo;
     }
-    
+
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
@@ -59,15 +62,36 @@ public abstract class GenePart implements Model {
     }
     //---------------------------------------
     //  </editor-fold>
+    //---------------------------Public Methods--------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public Methods">
+
+    /**
+     * Personaliza el modo de impresion de las posiciones de inicio y fin
+     * correspondientes a cada parte del gen
+     */
+    public List<Information> getData() {
+        ArrayList<Information> data = new ArrayList<>();
+        data.add(this.start);
+        
+        for (Information information : this.innerInfo) {
+            data.add(information);
+        }
+        
+        data.add(this.end);
+        return data;
+    }
+    //  </editor-fold>
     //---------------------------Abstract Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
+
     /**
      * Personaliza el modo de impresion de la data de una parte del gen
      */
     public abstract String getStringInfo(boolean intron);
     //---------------------------------------
+
     /**
-     * Personaliza el modo de impresion de las posiciones de inicio y fin 
+     * Personaliza el modo de impresion de las posiciones de inicio y fin
      * correspondientes a cada parte del gen
      */
     public abstract String getPositionsInfo(boolean intron);

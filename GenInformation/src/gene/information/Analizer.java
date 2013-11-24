@@ -7,7 +7,6 @@ import gene.feature.Intron;
 import gene.feature.Model;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import util.MiddleWare;
 
@@ -93,15 +92,15 @@ public class Analizer {
                 }
             } else {
                 //en este punto, las 4 listas estan llenas y debo hacer las iteraciones
-                Gene posibilities = getPosibilities();
+                Gene possibilities = getPosibilities();
 
-                if (!posibilities.getIntrons().isEmpty()) {
-                    ArrayDeque<ArrayDeque<Intron>> mixedIntrons = new ArrayDeque<>();
+                if (!possibilities.getIntrons().isEmpty()) {
+                    ArrayDeque<ArrayDeque<Intron>> mixedIntrons;
 
                     if (recursively) {
-                        this.recursivelyMix(null, 0, 0, posibilities, 0, mixedIntrons);
+                        mixedIntrons = this.recursivelyMix(possibilities);
                     } else {
-                        mixedIntrons = this.iterativeMix(posibilities);
+                        mixedIntrons = this.iterativeMix(possibilities);
                     }
 
                     this.generateLectures(mixedIntrons);
@@ -133,11 +132,14 @@ public class Analizer {
         for (Integer iniIntron : constructor.getGt()) {
             for (Integer finIntron : constructor.getAg()) {
                 finIntron = finIntron + 1;
-                if (iniIntron.intValue() < finIntron.intValue()) {
+
+                if (iniIntron < finIntron) {
                     int d = finIntron - iniIntron;
+
                     if (d > Model.minIntron && d < Model.maxIntron) {
                         start = constructor.getData(iniIntron);
                         end = constructor.getData(finIntron);
+
                         posibilities.addIntron(new Intron(start, end, constructor.getInnerInfo(iniIntron + 1, finIntron)));
                     }
                 }
@@ -154,10 +156,10 @@ public class Analizer {
      * lectura, pues se valida que pueda existir un exon entre ellos y demas
      * propiedades
      */
-    private ArrayDeque<ArrayDeque<Intron>> iterativeMix(Gene posibilities) {
+    private ArrayDeque<ArrayDeque<Intron>> iterativeMix(Gene possibilities) {
         ArrayDeque<ArrayDeque<Intron>> mixedIntrons = new ArrayDeque<>();
 
-        ArrayDeque<Intron> introns = new ArrayDeque<>(posibilities.getIntrons());
+        ArrayDeque<Intron> introns = new ArrayDeque<>(possibilities.getIntrons());
 
         while (!introns.isEmpty()) {
             ArrayDeque<Intron> possibleMix = new ArrayDeque<>();
@@ -167,24 +169,37 @@ public class Analizer {
 
             while (!iteratorQueue.isEmpty()) {
                 Intron pos = iteratorQueue.pollFirst();
+
                 if (pos.getStart().position > possibleMix.peekLast().getStart().position
                         && pos.getEnd().position > possibleMix.peekLast().getEnd().position) {
+
                     int d = pos.getStart().position - possibleMix.peekLast().getEnd().position;
+
                     if (d >= Model.minExon && d <= Model.maxExon) {
                         possibleMix.add(pos);
                     }
                 }
             }
 
-            if (possibleMix.size() > 1) {
+            if (possibleMix.size() > 0) {
                 mixedIntrons.add(possibleMix);
             }
         }
 
-        if (mixedIntrons.isEmpty()) {
-            for (Intron intron : introns) {
-                mixedIntrons.add(new ArrayDeque<>(Arrays.asList(intron)));
-            }
+        return mixedIntrons;
+    }
+
+    //---------------------------------------
+    /**
+     * Metodo ITERATIVO que hace uso del metodo RECURSIVO para generar las
+     * mezclas posibles de intrones que vienen en los intrones posibles
+     */
+    private ArrayDeque<ArrayDeque<Intron>> recursivelyMix(Gene possibilities) {
+        ArrayDeque<ArrayDeque<Intron>> mixedIntrons = new ArrayDeque<>();
+        int size = possibilities.getIntrons().size();
+
+        for (int i = 0; i < size; i++) {
+            mixedIntrons.addAll(recursivelyMix(null, i, 0, possibilities.getIntrons(), size, null));
         }
 
         return mixedIntrons;
@@ -203,22 +218,29 @@ public class Analizer {
      * no puede abarcar precisamente por ser iterativa, por lo que este metodo
      * es mas eficaz y debe ser usado en lugar del iterativo
      */
-    private Intron recursivelyMix(Intron last, int pos, int level, Gene posibilities, int size, ArrayDeque<ArrayDeque<Intron>> paths) {
-        if (last == null) {
+    private ArrayDeque<ArrayDeque<Intron>> recursivelyMix(Intron last, int pos, int level, List<Intron> posibilities, int size, ArrayDeque<Intron> paths) {
+        ArrayDeque<ArrayDeque<Intron>> mixed = new ArrayDeque<>();
+
+        if (paths == null) {
+            last = posibilities.get(pos);
             level = 0;
-            paths.push(new ArrayDeque<Intron>());
-            paths.peek().push(recursivelyMix(posibilities.getIntron(pos), pos, level, posibilities, posibilities.getIntrons().size(), paths));
+            paths = new ArrayDeque<>();
+
+            mixed.addAll(recursivelyMix(last, pos, level, posibilities, size, paths));
         } else {
+            paths.add(last);
+
             while (++pos < size) {
-                int d = posibilities.getIntron(pos).getStart().position - last.getEnd().position;
+                Intron possible = posibilities.get(pos);
+                int d = possible.getStart().position - last.getEnd().position;
 
                 if (d >= Model.minExon && d <= Model.maxExon) {
-                    paths.peek().push(recursivelyMix(posibilities.getIntron(pos), pos, level + 1, posibilities, size, paths));
+                    mixed.addAll(recursivelyMix(possible, pos, level + 1, posibilities, size, paths.clone()));
                 }
             }
+            
         }
-
-        return last;
+        return mixed;
     }
 
     //---------------------------------------
@@ -228,20 +250,26 @@ public class Analizer {
      * parametro "mixedIntrons" deberia ser la salida de alguno de los metodos
      * de combinacion (recursivelyMix, iterativeMix) para mayor efectividad
      */
-    private void generateLectures(ArrayDeque<ArrayDeque<Intron>> mixedIntrons) {
+    private void generateLectures(ArrayDeque<ArrayDeque<Intron>> mixedIntrons) throws Exception {
         while (!mixedIntrons.isEmpty()) {
             ArrayDeque<Intron> introns = mixedIntrons.poll();
+            boolean shouldCheck = !(constructor.isWithoutStarts() || constructor.isWithoutStops());
+
             for (Integer start : constructor.getAtg()) {
                 int d = introns.peekFirst().getStart().position - start;
+
                 if (d >= Model.minExon && d <= Model.maxExon) {
                     for (Integer end : constructor.getStops()) {
-                        if(!constructor.isWithoutStops())
-                            end = end + 2;
                         d = end - introns.peekLast().getEnd().position;
+
                         if (d >= Model.minExon && d <= Model.maxExon) {
-                            Gene lecture = new Gene(constructor.getData(start), constructor.getData(end));
+                            List<Information> geneData = constructor.getGeneData();
+
+                            Gene lecture = new Gene(constructor.getData(start), constructor.getData(end), shouldCheck, geneData);
+
                             lecture.setIntrons(new ArrayList<>(introns));
-                            lecture.inferExons(constructor.getGeneData());
+                            lecture.inferExons(geneData);
+
                             this.lectures.add(lecture);
                         }
                     }
@@ -249,10 +277,10 @@ public class Analizer {
             }
         }
     }
+
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
-
     @Override
     public String toString() {
         String out = constructor.toString();
@@ -260,6 +288,8 @@ public class Analizer {
         int i = 0;
         for (Gene gene : lectures) {
             out += "\n----------------------------Lectura #" + (++i) + "----------------------------------\n";
+            out += "GEN = " + gene.toString() + "\n";
+            out += "----------------------------------------------------\n";
             out += "Intrones PARES = " + gene.getPositionsInfo(true) + "\n";
             out += "Intrones DATA = " + gene.getStringInfo(true) + "\n";
             out += "----------------------------------------------------\n";
