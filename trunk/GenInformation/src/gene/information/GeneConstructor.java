@@ -21,6 +21,7 @@ public class GeneConstructor {
     //---------------------------------------
     private List<Information> geneData;
     //---------------------------------------
+    private boolean withoutStarts = false;
     private boolean withoutStops = false;
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
@@ -114,6 +115,12 @@ public class GeneConstructor {
         return withoutStops;
     }
     
+    //---------------------------------------
+    public boolean isWithoutStarts() {
+
+        return withoutStarts;
+    }
+    
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
@@ -129,9 +136,14 @@ public class GeneConstructor {
 
         if (!this.gt.isEmpty() && !this.ag.isEmpty()) {
             if (this.atg.isEmpty()) {
+                System.err.println("ADVERTENCIA: GEN SIN INICIO, posibles lecturas incompatibles"
+                        + "\n validaciones de correspondencia desactivadas");
+                this.withoutStarts = true;
                 this.atg.add(new Integer(0));
             }
             if (this.stops.isEmpty()) {
+                System.err.println("ADVERTENCIA: GEN SIN FIN, posibles lecturas incompatibles"
+                        + "\n validaciones de correspondencia desactivadas");
                 this.withoutStops = true;
                 this.stops.add(new Integer(geneData.size() - 1));
             }

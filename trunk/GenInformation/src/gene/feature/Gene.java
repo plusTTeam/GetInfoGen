@@ -2,6 +2,7 @@ package gene.feature;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Clase que extiende de GenePart y especifica un GEN como tal, posee una lista
@@ -10,11 +11,18 @@ import java.util.List;
  * LECTURA VALIDA
  */
 public class Gene extends GenePart {
+    //---------------------------Static Constants-------------------------------
+    // <editor-fold desc="Static Constants">
+
+    public static final Pattern startPattern = Pattern.compile(Model.ATG);
+    public static final Pattern endPattern = Pattern.compile(Model.stops[Model.TAA] + "|" + Model.stops[Model.TAG] + "|" + Model.stops[Model.TGA]);
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
-
     private List<Intron> introns;
     private List<Exon> exons;
+    private boolean checkEdges;
 
     //---------------------------------------
     //  </editor-fold>
@@ -22,23 +30,54 @@ public class Gene extends GenePart {
     // <editor-fold defaultstate="collapsed" desc="Constructors">
     /**
      * Se requiere solo la informacion de donde comienza y donde termina el gen
-     * el decir el "atg" y cualquier Parada (taa,tag,tga)
+     * es decir el "atg" y cualquier Parada (taa,tag,tga), sin comprobacion de
+     * correspondencia valida
      */
     public Gene(Information start, Information end) {
         super(start, end);
         this.innerInfo = new ArrayList<>();
+        this.checkEdges = false;
     }
 
     //---------------------------------------
+    /**
+     * Se requiere la informacion de donde comienza y donde termina el gen y
+     * recibe un boolean para saber si comprobar o no los bordes con sus
+     * correspondientes valores atg(Inicio) taa,tag,tga(Paradas)
+     */
+    public Gene(Information start, Information end, boolean checkEdges, List<Information> geneData) throws Exception {
+        super(start, end);
+        this.innerInfo = new ArrayList<>();
+        this.checkEdges = checkEdges;
+
+        if (this.checkEdges) {
+            int is = this.start.position;
+            String atg = this.start.toString() + geneData.get(++is).toString() + geneData.get(++is).toString();
+            int ie = this.end.position;
+            String stop = this.end.toString() + geneData.get(++ie).toString() + geneData.get(++ie).toString();
+
+            if (!startPattern.matcher(atg).find() || !endPattern.matcher(stop).find()) {
+                is = this.start.position;
+                ie = this.end.position;
+
+                throw new Exception("GEN INVALIDO, (" + is + ":" + ie + ")[" + atg + ":" + stop + "]"
+                        + " NO CORRESPONDE a una estructura de gen VALIDA "
+                        + "[" + startPattern.pattern() + ":" + endPattern.pattern() + "]");
+            }
+
+            this.end = geneData.get(ie);
+        }
+    }
     //  </editor-fold>
     //---------------------------Getters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Getters">
-    public List getIntrons() {
+
+    public List<Intron> getIntrons() {
         return introns;
     }
 
     //---------------------------------------
-    public List getExons() {
+    public List<Exon> getExons() {
         return exons;
     }
 
@@ -51,7 +90,7 @@ public class Gene extends GenePart {
     public Intron getIntron(int i) {
         return introns.get(i);
     }
-    
+
     //  </editor-fold>
     //---------------------------Setters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Setters">
@@ -128,7 +167,7 @@ public class Gene extends GenePart {
         String out = "[";
 
         if (intronFormat) {
-            
+
             out += start.toString();
             out += this.exons.get(0).getFirstToGene();
 
@@ -136,7 +175,12 @@ public class Gene extends GenePart {
                 out += "," + intron.getStringInfo(intronFormat);
             }
 
-            out += "," + this.exons.get(exons.size() - 1).getLastToGene();
+            out += ",";
+
+            if (checkEdges) {
+                out += this.exons.get(exons.size() - 1).getLastToGene();
+            }
+
             out += this.end.toString();
         } else {
             for (Exon exon : exons) {
@@ -166,12 +210,12 @@ public class Gene extends GenePart {
 
         if (intronFormat) {
             out += start.position.toString();
-            
+
             for (Intron intron : introns) {
                 out += "," + intron.getPositionsInfo(intronFormat);
             }
-            
-            out += "," + this.getEnd().position.toString();
+
+            out += "," + ((checkEdges) ? this.getEnd() : this.end).position.toString();
         } else {
             for (Exon exon : exons) {
                 out += "," + exon.getPositionsInfo(intronFormat);
@@ -183,12 +227,46 @@ public class Gene extends GenePart {
 
         return out;
     }
+
+    //---------------------------------------
+    @Override
+    public Information getEnd() {
+        return this.exons.get(exons.size() - 1).getLastInfToGene();
+    }
+
+    //---------------------------------------
+    @Override
+    public String toString() {
+        String out = "";
+        int exonsSize = exons.size();
+        int intronsSize = introns.size();
+
+        for (int i = 0; i < exonsSize; i++) {
+            out += exons.get(i).toString();
+            if (i < intronsSize) {
+                out += introns.get(i).toString();
+            }
+        }
+
+        return out;
+    }
     
     //---------------------------------------
     @Override
-    public Information getEnd(){
-        return this.exons.get(exons.size() - 1).getLastInfToGene();
+    public List<Information> getData() {
+        ArrayList<Information> data = new ArrayList<>();
+        
+        int exonsSize = exons.size();
+        int intronsSize = introns.size();
+
+        for (int i = 0; i < exonsSize; i++) {
+            data.addAll(this.exons.get(i).getData());
+            if (i < intronsSize) {
+                data.addAll(this.introns.get(i).getData());
+            }
+        }
+        
+        return data;
     }
-    
     //  </editor-fold>
 }
