@@ -1,0 +1,10 @@
+#summary One-sentence summary of this page.
+
+= Introducción =
+
+Se adjunta un video tutorial de la instalación de SWI PROLOG en cualquier plataforma.
+
+= Detalles =
+
+  # Ingresar al URL: www.swi-prolog.org/Download.html
+  # Seguir las instrucciones del video tutorial dependiendo su sistema operativo.
