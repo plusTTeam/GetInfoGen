@@ -9,4 +9,4 @@ Se adjunta un video tutorial de la instalación de SWI PROLOG en cualquier plata
   # Ingresar al URL: www.swi-prolog.org/Download.html
   # Seguir las instrucciones del video tutorial dependiendo su sistema operativo.
 
-<wiki:video url="http://youtu.be/DY7j6HXYhAo"/>
+<wiki:video url="http://www.youtube.com/watch?v=DY7j6HXYhAo"/>
