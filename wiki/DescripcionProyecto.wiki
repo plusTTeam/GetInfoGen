@@ -3,3 +3,5 @@
 = Introducción =
 
 Se adjunta un video tutorial que muestra un recorrido descriptivo  por el proyecto GEN INFORMATION, detallando la funcionalidad de cada clase y sus atributos.
+
+<wiki:video url="http://www.youtube.com/watch?v=P69gHKV3yko"/>
